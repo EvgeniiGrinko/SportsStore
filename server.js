@@ -9,18 +9,18 @@ let router = undefined;
 const app = express();
 const createServer = () => {
 delete require.cache[require.resolve(fileName)];
-setTimeout(() => {
-router = jsonServer.router(fileName.endsWith(".js")
-? require(fileName)() : fileName);
-}, 100)
+    setTimeout(() => {
+            router = jsonServer.router(fileName.endsWith(".js")
+            ? require(fileName)() : fileName);
+        }, 100)
 }
 createServer();
 app.use(cors());
 app.use(jsonServer.bodyParser)
 app.use("/api", (req, resp, next) => router(req, resp, next));
 chokidar.watch(fileName).on("change", () => {
-console.log("Reloading web service data...");
-createServer();
-console.log("Reloading web service data complete.");
+    console.log("Reloading web service data...");
+    createServer();
+    console.log("Reloading web service data complete.");
 });
 app.listen(port, () => console.log(`Web service running on port ${port}`));
